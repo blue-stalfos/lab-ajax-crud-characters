@@ -8,16 +8,17 @@ const hbs          = require('hbs');
 const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
+const Character     = require('./models/character');
 
 
 mongoose.Promise = Promise;
 mongoose
-  .connect('mongodb://localhost/lab-ajax-crud-characters', {useMongoClient: true})
-  .then(() => {
-    console.log('Connected to Mongo!')
-  }).catch(err => {
-    console.error('Error connecting to mongo', err)
-  });
+	.connect('mongodb://localhost/ajax-characters-review', {useMongoClient: true})
+	.then(() => {
+		console.log('Connected to Mongo!')
+	}).catch(err => {
+		console.error('Error connecting to mongo', err)
+	});
 
 const app_name = require('./package.json').name;
 const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.')[0]}`);
@@ -33,11 +34,11 @@ app.use(cookieParser());
 // Express View engine setup
 
 app.use(require('node-sass-middleware')({
-  src:  path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
-  sourceMap: true
+	src:  path.join(__dirname, 'public'),
+	dest: path.join(__dirname, 'public'),
+	sourceMap: true
 }));
-      
+			
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -54,5 +55,7 @@ app.locals.title = 'Express - Generated with IronGenerator';
 const index = require('./routes/index');
 app.use('/', index);
 
+const apiRoutes = require('./routes/characters-api');
+app.use('/api', apiRoutes);
 
 module.exports = app;
